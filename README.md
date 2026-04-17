@@ -10,7 +10,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://langchain.com)
-[![Gemini](https://img.shields.io/badge/Google_Gemini-Free-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
+[![Groq](https://img.shields.io/badge/Groq_Llama_3-Free-F55036?style=for-the-badge&logo=meta&logoColor=white)](https://console.groq.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 **Upload documents. Ask questions. Get instant answers with source citations.**
@@ -140,14 +140,14 @@ Open **http://localhost:5173** in your browser 🎉
 docker-compose up --build
 ```
 
-## 🔑 Getting Your Free Gemini API Key
+## 🔑 Getting Your Free Groq API Key
 
-1. Go to [Google AI Studio](https://aistudio.google.com/apikey)
-2. Click **"Create API Key"**
-3. Copy the key
-4. Paste it in `backend/.env` as `GOOGLE_API_KEY=your_key_here`
+1. Go to [Groq Console](https://console.groq.com/keys)
+2. Sign up with Google or GitHub
+3. Click **"Create API Key"** and copy it
+4. Paste it in `backend/.env` as `GROQ_API_KEY=your_key_here`
 
-> **Note:** The free tier gives you **15 requests/minute** and **1 million tokens/day** — more than enough for personal use!
+> **Note:** The free tier gives you **30 requests/minute** with Llama 3 — more than enough for personal use!
 
 ## 📡 API Endpoints
 
@@ -166,8 +166,8 @@ docker-compose up --build
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **LLM** | Google Gemini 2.0 Flash | Answer generation (FREE tier) |
-| **Embeddings** | sentence-transformers (all-MiniLM-L6-v2) | Semantic search (runs locally) |
+| **LLM** | Groq Llama 3.1 (Meta) | Answer generation (FREE tier) |
+| **Embeddings** | ONNX MiniLM-L6-v2 | Semantic search (runs locally) |
 | **Vector DB** | ChromaDB | Document storage & retrieval |
 | **Framework** | LangChain | RAG pipeline orchestration |
 | **Backend** | FastAPI + Uvicorn | REST API server |
@@ -242,7 +242,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 <div align="center">
 
-**Built with ❤️ using RAG, LangChain, and Google Gemini**
+**Built with ❤️ using RAG, LangChain, and Groq Llama 3**
 
 *If you found this useful, give it a ⭐!*
 
