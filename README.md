@@ -2,6 +2,8 @@
 
 # 🧠 DocuMind AI
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-blue?style=for-the-badge&logo=vercel)](https://documind-kk7lr48re-awais-khaliqs-projects.vercel.app/)
+
 ### AI-Powered Document Intelligence System
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
