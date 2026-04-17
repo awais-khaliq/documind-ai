@@ -2,7 +2,8 @@
  * DocuMind AI — API Utility Functions
  */
 
-const API_BASE = '/api';
+const API_BASE = 'https://awais-khaliq-documind-ai-backend.hf.space/api';
+
 
 /**
  * Upload a document file to the backend.
