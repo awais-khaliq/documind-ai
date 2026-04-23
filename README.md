@@ -1,249 +1,75 @@
-<div align="center">
+# DocuMind AI
 
-# 🧠 DocuMind AI
+An intelligent document retrieval and question-answering system powered by Retrieval-Augmented Generation (RAG).
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-blue?style=for-the-badge&logo=vercel)](https://documind-kk7lr48re-awais-khaliqs-projects.vercel.app/)
+## Project Overview
 
-### AI-Powered Document Intelligence System
+DocuMind AI enables users to upload various document formats (PDF, DOCX, TXT) and interactively query their contents using natural language. The system processes the uploaded text, converts it into semantic embeddings, and stores it in a local vector database. When a user asks a question, the application retrieves the most relevant document chunks and uses a Large Language Model (LLM) to generate a precise answer, complete with exact source citations.
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![LangChain](https://img.shields.io/badge/LangChain-0.3-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://langchain.com)
-[![Groq](https://img.shields.io/badge/Groq_Llama_3-Free-F55036?style=for-the-badge&logo=meta&logoColor=white)](https://console.groq.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+This completely free implementation relies on local embeddings for data privacy and speed, alongside the Google Gemini free tier for language generation.
 
-**Upload documents. Ask questions. Get instant answers with source citations.**
+## Core Features
 
-*Built with Retrieval-Augmented Generation (RAG) — 100% Free to run*
+* Multi-Format Support: Processes PDF, DOCX, and TXT files natively up to 50MB.
+* Semantic Search Retrieval: Employs sentence-transformers to capture the actual meaning of documents rather than just keyword matching.
+* Context-Aware Q&A: Synthesizes answers based strictly on the provided documents to mitigate hallucination risks.
+* Transparent Citations: Every generated answer explicitly references the source document and page number it derived its information from.
+* Private Vector Storage: Utilizes ChromaDB locally, ensuring that raw document embeddings never leave your environment unless required for a specific LLM prompt.
 
----
+## Technology Stack
 
-</div>
+* Language/Framework: Python 3.11+, FastAPI (Backend)
+* Frontend: React 18 with Vite, custom CSS
+* AI Orchestration: LangChain
+* Vector Database: ChromaDB
+* Embedding Model: ONNX MiniLM-L6-v2 (Local execution)
+* Generation Model: Groq Llama 3.1 or Google Gemini (Configurable via API Keys)
 
-## ✨ Features
+## System Architecture
 
-| Feature | Description |
-|---------|-------------|
-| 📄 **Multi-Format Upload** | Support for PDF, DOCX, and TXT files up to 50MB |
-| 🔍 **Semantic Search** | Intelligent document retrieval using sentence-transformer embeddings |
-| 💬 **Natural Language Q&A** | Ask questions in plain English and get accurate answers |
-| 📑 **Source Citations** | Every answer includes clickable source references with page numbers |
-| 🎯 **Confidence Scoring** | AI confidence indicator shows how well-grounded each answer is |
-| 💾 **Persistent Storage** | Documents and embeddings stored locally with ChromaDB |
-| 🆓 **100% Free** | Uses Google Gemini free tier + local embeddings (no paid APIs!) |
-| 🎨 **Premium UI** | Dark-themed glassmorphism design with smooth animations |
-| 📱 **Responsive** | Works on desktop and mobile devices |
-| 🐳 **Docker Ready** | One-command deployment with Docker Compose |
+The application is decoupled into a RESTful FastAPI backend and a React frontend. The backend manages document parsing, chunking (fixed size with overlap), vectorization, and database storage. The frontend provides a responsive chat interface and drag-and-drop document management tools.
 
-## 🏗️ Architecture
+1. Document Upload: Files are parsed and split into overlapping chunks of ~1000 characters.
+2. Embedding: Each chunk is converted to a 384-dimensional vector using the all-MiniLM-L6-v2 model.
+3. Storage: Vectors and their associated metadata are stored in ChromaDB.
+4. Query Execution: User questions are embedded and compared against the vector store to retrieve the top-K most similar chunks.
+5. Generation: The LLM processes the question alongside the retrieved context to formulate the final answer.
 
-```
-┌──────────────┐     REST API      ┌──────────────────┐
-│              │ ◄────────────────► │                  │
-│  React + Vite│                   │  FastAPI Backend  │
-│  Frontend    │                   │                   │
-│              │                   │  ┌──────────────┐ │
-└──────────────┘                   │  │ Document     │ │
-                                   │  │ Processor    │ │
-                                   │  │ (PDF/DOCX/   │ │
-                                   │  │  TXT)        │ │
-                                   │  └──────┬───────┘ │
-                                   │         │         │
-                                   │  ┌──────▼───────┐ │
-                                   │  │ Text         │ │
-                                   │  │ Splitter     │ │
-                                   │  │ (1000 chars) │ │
-                                   │  └──────┬───────┘ │
-                                   │         │         │
-                                   │  ┌──────▼───────┐ │
-                                   │  │ Sentence     │ │
-                                   │  │ Transformers │ │
-                                   │  │ (Local)      │ │
-                                   │  └──────┬───────┘ │
-                                   │         │         │
-                                   │  ┌──────▼───────┐ │
-                                   │  │ ChromaDB     │ │
-                                   │  │ Vector Store │ │
-                                   │  └──────┬───────┘ │
-                                   │         │         │
-                                   │  ┌──────▼───────┐ │
-                                   │  │ RAG Pipeline │ │
-                                   │  │ + Gemini LLM │ │
-                                   │  └──────────────┘ │
-                                   └──────────────────┘
-```
+## How to Run Locally
 
-## 🚀 Quick Start
+### Requirements
+* Python 3.11 or higher
+* Node.js 18 or higher
+* Gemini or Groq API Key
 
-### Prerequisites
+### Backend Setup
+1. Navigate to the backend directory:
+   cd backend
+2. Create and activate a virtual environment:
+   python -m venv venv
+   source venv/Scripts/activate (Windows) or source venv/bin/activate (Unix)
+3. Install dependencies:
+   pip install -r requirements.txt
+4. Configure the environment variables by renaming .env.example to .env and adding your API key.
+5. Start the backend server:
+   uvicorn app.main:app --reload --port 8000
 
-- **Python 3.11+** — [Download](https://python.org/downloads)
-- **Node.js 18+** — [Download](https://nodejs.org)
-- **Google Gemini API Key** (FREE) — [Get yours here](https://aistudio.google.com/apikey)
+### Frontend Setup
+1. Navigate to the frontend directory:
+   cd frontend
+2. Install dependencies:
+   npm install
+3. Start the development server:
+   npm run dev
 
-### 1. Clone the Repository
+The application will be available at http://localhost:5173.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/documind-ai.git
-cd documind-ai
-```
+## Integration & Configuration
 
-### 2. Set Up Backend
+To use the Groq Llama 3 engine instead of Gemini:
+1. Obtain an API key from the Groq Developer Console.
+2. Update your backend `.env` file with `GROQ_API_KEY=your_key_here`.
 
-```bash
-# Navigate to backend
-cd backend
+## API Documentation
 
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment
-copy .env.example .env
-# Edit .env and add your FREE Gemini API key
-```
-
-### 3. Set Up Frontend
-
-```bash
-# In a new terminal, navigate to frontend
-cd frontend
-
-# Install dependencies
-npm install
-```
-
-### 4. Run the Application
-
-```bash
-# Terminal 1 — Start backend (from /backend directory)
-uvicorn app.main:app --reload --port 8000
-
-# Terminal 2 — Start frontend (from /frontend directory)
-npm run dev
-```
-
-Open **http://localhost:5173** in your browser 🎉
-
-### 🐳 Docker (Alternative)
-
-```bash
-docker-compose up --build
-```
-
-## 🔑 Getting Your Free Groq API Key
-
-1. Go to [Groq Console](https://console.groq.com/keys)
-2. Sign up with Google or GitHub
-3. Click **"Create API Key"** and copy it
-4. Paste it in `backend/.env` as `GROQ_API_KEY=your_key_here`
-
-> **Note:** The free tier gives you **30 requests/minute** with Llama 3 — more than enough for personal use!
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/documents/upload` | Upload a document (PDF/DOCX/TXT) |
-| `GET` | `/api/documents` | List all uploaded documents |
-| `DELETE` | `/api/documents/{id}` | Delete a document |
-| `POST` | `/api/chat` | Ask a question about your documents |
-| `GET` | `/api/chat/conversations` | List all conversations |
-| `GET` | `/api/chat/history/{id}` | Get conversation history |
-| `GET` | `/health` | Health check |
-| `GET` | `/docs` | Interactive API docs (Swagger) |
-
-## 🛠️ Tech Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **LLM** | Groq Llama 3.1 (Meta) | Answer generation (FREE tier) |
-| **Embeddings** | ONNX MiniLM-L6-v2 | Semantic search (runs locally) |
-| **Vector DB** | ChromaDB | Document storage & retrieval |
-| **Framework** | LangChain | RAG pipeline orchestration |
-| **Backend** | FastAPI + Uvicorn | REST API server |
-| **Frontend** | React 18 + Vite | User interface |
-| **Styling** | Custom CSS | Premium dark glassmorphism theme |
-| **Icons** | Lucide React | Beautiful SVG icons |
-
-## 📁 Project Structure
-
-```
-documind-ai/
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py                    # FastAPI application
-│   │   ├── config.py                  # Environment configuration
-│   │   ├── models.py                  # Pydantic schemas
-│   │   ├── services/
-│   │   │   ├── document_processor.py  # Text extraction & chunking
-│   │   │   ├── vector_store.py        # ChromaDB + embeddings
-│   │   │   └── rag_pipeline.py        # LangChain RAG chain
-│   │   └── routes/
-│   │       ├── documents.py           # Document CRUD endpoints
-│   │       └── chat.py                # Chat Q&A endpoints
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   └── .env.example
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx                    # Main application
-│   │   ├── index.css                  # Design system
-│   │   ├── components/
-│   │   │   ├── Sidebar.jsx            # Document & chat management
-│   │   │   ├── ChatArea.jsx           # Chat interface
-│   │   │   ├── MessageBubble.jsx      # Message display
-│   │   │   ├── DocumentUpload.jsx     # Drag-and-drop upload
-│   │   │   └── SourceCard.jsx         # Source citations
-│   │   └── utils/
-│   │       └── api.js                 # API client functions
-│   ├── package.json
-│   ├── vite.config.js
-│   └── Dockerfile
-├── docker-compose.yml
-├── .gitignore
-├── LICENSE
-└── README.md
-```
-
-## 🔬 How It Works
-
-1. **Document Upload** — Files are parsed (PDF → text, DOCX → text) and split into overlapping chunks of ~1000 characters
-
-2. **Embedding** — Each chunk is converted to a 384-dimensional vector using the `all-MiniLM-L6-v2` model (runs locally, no API needed)
-
-3. **Storage** — Vectors are stored in ChromaDB with metadata (filename, page number, chunk position)
-
-4. **Query** — When you ask a question, it's embedded and the top 5 most similar chunks are retrieved
-
-5. **Generation** — The retrieved chunks are sent to Google Gemini along with your question. The AI generates an answer based *only* on the provided context
-
-6. **Citations** — Each source chunk is returned with its filename, page number, and relevance score
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-
-**Built with ❤️ using RAG, LangChain, and Groq Llama 3**
-
-*If you found this useful, give it a ⭐!*
-
-</div>
+Once the backend is running, you can explore the complete interactive API documentation (Swagger UI) by navigating to `http://localhost:8000/docs`.
